@@ -53,13 +53,8 @@ jobs:
         cmake --install .
       shell: pwsh
 
-    - name: Package Qt installation
-      run: |
-        Compress-Archive -Path "${{ inputs.install_path }}" -DestinationPath "qt-6.8.2-windows.zip"
-      shell: pwsh
-
     - name: Upload Qt package
       uses: actions/upload-artifact@v4
       with:
         name: qt-6.8.2-windows
-        path: qt-6.8.2-windows.zip
+        path: ${{ inputs.install_path }}
