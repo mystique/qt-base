@@ -1,0 +1,54 @@
+name: Qt Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      install_path:
+        description: 'Qt installation path'
+        required: true
+        default: 'C:\Qt\6.8.2'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Download Qt source
+      run: |
+        curl -L -o qtbase.zip https://download.qt.io/official_releases/qt/6.8/6.8.2/submodules/qtbase-everywhere-src-6.8.2.zip
+      
+    - name: Extract Qt source
+      run: |
+        Expand-Archive -Path qtbase.zip -DestinationPath qt-source
+        
+    - name: Setup build environment
+      run: |
+        cd qt-source/qtbase-everywhere-src-6.8.2
+        ./configure.bat -prefix ${{ inputs.install_path }}
+      shell: pwsh
+      
+    - name: Build Qt
+      run: |
+        cd qt-source/qtbase-everywhere-src-6.8.2
+        cmake --build . --parallel
+      shell: pwsh
+      
+    - name: Install Qt
+      run: |
+        cd qt-source/qtbase-everywhere-src-6.8.2
+        cmake --install .
+      shell: pwsh
+
+    - name: Package Qt installation
+      run: |
+        Compress-Archive -Path "${{ inputs.install_path }}" -DestinationPath "qt-6.8.2-windows.zip"
+      shell: pwsh
+
+    - name: Upload Qt package
+      uses: actions/upload-artifact@v4
+      with:
+        name: qt-6.8.2-windows
+        path: qt-6.8.2-windows.zip
