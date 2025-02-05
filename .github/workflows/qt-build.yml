@@ -15,7 +15,18 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      
+
+    - name: Setup VS2022
+      uses: microsoft/setup-msbuild@v1.3
+      with:
+        vs-version: '17.0'
+
+    - name: Setup Visual Studio Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+        vsversion: '2022'
+
     - name: Download Qt source
       run: |
         curl -L -o qtbase.zip https://download.qt.io/official_releases/qt/6.8/6.8.2/submodules/qtbase-everywhere-src-6.8.2.zip
