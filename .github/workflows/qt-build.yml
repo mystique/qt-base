@@ -38,7 +38,7 @@ jobs:
     - name: Setup build environment
       run: |
         cd qt-source/qtbase-everywhere-src-6.8.2
-        ./configure.bat -prefix ${{ inputs.install_path }}
+        ./configure.bat -prefix ${{ inputs.install_path }} -release -optimize-size
       shell: pwsh
       
     - name: Build Qt
@@ -56,5 +56,5 @@ jobs:
     - name: Upload Qt package
       uses: actions/upload-artifact@v4
       with:
-        name: qt-6.8.2-windows
+        name: qt-base-6.8.2-windows
         path: ${{ inputs.install_path }}
